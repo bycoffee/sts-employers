@@ -3,13 +3,13 @@ from selenium.webdriver.common.by import By
 
 import time
 
-browser = webdriver.Chrome('./selenium/chromedriver.exe')
+browser = webdriver.Chrome('./selenium/chromedriver')
 browser.get('http://meuholerite.com.br')
 
 # Data
-cpf = 'cpf'
-senha = 'password'
-notWorkingAt = ['05/10/2018'] # String array with dates (Eg.: 02/10/2018)
+cpf = '48728336860'
+senha = 'f3lpera'
+notWorkingAt = [] # String array with dates (Eg.: 02/10/2018)
 workOnSaturday = False
 workOnSunday = False
 
@@ -27,10 +27,11 @@ btnLogin.click()
 # Time & Attendance / Ponto
 browser.get('https://prd.meuholerite.com.br/Ponto.aspx')
 
-tdsDiaSemana = browser.find_elements(By.CSS_SELECTOR, '.tabela_ponto tbody tr .td_dia_semana')
+tdsweekDay = browser.find_elements(By.CSS_SELECTOR, '.tabela_ponto tbody tr .td_dia_semana')
 
 # Início do Expediente
 tdsEntrada1 = browser.find_elements(By.CSS_SELECTOR, '.tabela_ponto tbody tr .coluna1.borda_espessa_esquerda.td_entrada a')
+
 # Início do Almoço
 tdsSaida1 = browser.find_elements(By.CSS_SELECTOR, '.tabela_ponto tbody tr .coluna2.td_saida a')
 
@@ -48,20 +49,21 @@ print('Dias neste mês: ' + str(monthDays))
 
 for x in range(monthDays):
     data = tdsEntrada1[x].get_attribute('dp')
-    diaSemana = tdsDiaSemana[x].get_attribute('innerHTML')
+    weekDay = tdsweekDay[x].get_attribute('innerHTML')
 
     try:
         notWorkingAt.index(data)
-        print('Not working at: ' + data + ' - ' + diaSemana)
+        print('Not working at: ' + data + ' - ' + weekDay)
     except ValueError:
-        if diaSemana != 'sábado' and not workOnSaturday and diaSemana != 'domingo' and not workOnSunday:
+        if weekDay != 'sábado' and not workOnSaturday and weekDay != 'domingo' and not workOnSunday:
 
-            print('Dia: ' + data + ' - ' + diaSemana)
+            print('Dia: ' + data + ' - ' + weekDay)
 
             # Início do Expediente
             tdsEntrada1[x].click()
             time.sleep(4)
             inputSchedule = browser.find_element(By.ID, 'ctl00_cphPrincipal_txtHorario')
+            inputSchedule.click()
             inputSchedule.clear()
             inputSchedule.send_keys('0745')
 
@@ -74,6 +76,7 @@ for x in range(monthDays):
             tdsSaida1[x].click()
             time.sleep(4)
             inputSchedule = browser.find_element(By.ID, 'ctl00_cphPrincipal_txtHorario')
+            inputSchedule.click()
             inputSchedule.clear()
             inputSchedule.send_keys('1230')
 
@@ -86,10 +89,12 @@ for x in range(monthDays):
             tdsEntrada2[x].click()
             time.sleep(4)
             inputSchedule = browser.find_element(By.ID, 'ctl00_cphPrincipal_txtHorario')
+            inputSchedule.click()
             inputSchedule.clear()
             inputSchedule.send_keys('1330')
 
-            btnSalvarHorario = browser.find_element(By.ID, 'ctl00_cphPrincipal_btnCadastroPonto')            
+            btnSalvarHorario = browser.find_element(By.ID, 'ctl00_cphPrincipal_btnCadastroPonto')   
+            inputSchedule.click()         
             btnSalvarHorario.click()
             print('Waiting Request to Save')
             time.sleep(5)
