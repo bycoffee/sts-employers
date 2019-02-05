@@ -7,8 +7,8 @@ browser = webdriver.Chrome('./selenium/chromedriver')
 browser.get('http://meuholerite.com.br')
 
 # Data
-cpf = '48728336860'
-senha = 'f3lpera'
+cpf = 'your_cpf'
+senha = 'your_password'
 notWorkingAt = [] # String array with dates (Eg.: 02/10/2018)
 workOnSaturday = False
 workOnSunday = False
